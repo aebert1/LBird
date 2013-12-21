@@ -6,8 +6,8 @@
 
 class GameLoop
 {
-public:
 	GameLoop();
+	~GameLoop();
 
 	void LoopStartUp();
 	void LoopUpdate();

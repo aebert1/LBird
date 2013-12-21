@@ -3,16 +3,15 @@
 
 
 
-BackgroundLayer::BackgroundLayer()
+SkyLayer::SkyLayer()
 {
 	bool bRet = false;
 
 	do
 	{
-		CC_BREAK_IF(! BackgroundLayer::init());
+		CC_BREAK_IF(! SkyLayer::init());
 
 		initSky();
-		initGround();
 
 		bRet = true;
 	} while(0);
@@ -20,51 +19,24 @@ BackgroundLayer::BackgroundLayer()
 	//return bRet;
 }
 
-void BackgroundLayer::initSky()
+void SkyLayer::initSky()
 {
-	//Create and add sky to scene
 	CCSprite* sky = CCSprite::create("sky.png");
+
 	//sky->setScale(3.0f);
 	sky->setPosition(ccp(SCREEN_WIDTH/2, SCREEN_HEIGHT/2));
+
 	this->addChild(sky);
-
-	//Create and add background buildings to scene
-	CCSprite* building1 = CCSprite::create("buildings_BG.png");
-	building1->setPosition(ccp(SCREEN_WIDTH/2 - 100, SCREEN_HEIGHT/2 - 135));
-	this->addChild(building1);
-	
-	CCSprite* building2 = CCSprite::create("buildings_BG.png");
-	building2->setPosition(ccp(SCREEN_WIDTH/2 + 350, SCREEN_HEIGHT/2 - 170));
-	building2->setRotationY(10.0f);
-	this->addChild(building2);
-	
-	CCSprite* cloud1 = CCSprite::create("cloud01.png");
-	cloud1->setPosition(ccp(SCREEN_WIDTH/2 + 300, SCREEN_HEIGHT/2 + 250));
-	this->addChild(cloud1);
-
-	CCSprite* cloud2 = CCSprite::create("cloud02.png");
-	cloud2->setPosition(ccp(SCREEN_WIDTH/2 - 250, SCREEN_HEIGHT/2 + 245));
-	this->addChild(cloud2);
-
-	CCSprite* cloud3 = CCSprite::create("cloud03.png");
-	cloud3->setPosition(ccp(SCREEN_WIDTH/2 - 250, SCREEN_HEIGHT/2 + 100));
-	this->addChild(cloud3);
-
 }
 
-void BackgroundLayer::initGround()
-{
-	CCSprite* bush1 = CCSprite::create("bush02.png");
-	bush1->setPosition(ccp(SCREEN_WIDTH/2 + 300, SCREEN_HEIGHT/2 -205));
-	this->addChild(bush1);
-
-	CCSprite* bush2 = CCSprite::create("bush03.png");
 
 
-	CCSprite* ground = CCSprite::create("grounds.png");
-	ground->setPosition(ccp(SCREEN_WIDTH/2, SCREEN_HEIGHT/2 - 250));
-	this->addChild(ground);
-}
+
+
+
+
+
+
 
 
 
@@ -96,18 +68,20 @@ bool GameLayer::ccTouchBegan(CCTouch* touch, CCEvent* event)
 {
 	CCLog("Touch Began");
 	startPos = CCDirector::sharedDirector()->convertToGL(touch->getLocation());	
+	
 	return true;
 }
 
 void GameLayer::ccTouchEnded(CCTouch* touch, CCEvent* event)
 {
 	CCLOG("Touch Ended");
-
+	
 }
 
 void GameLayer::ccTouchMoved(CCTouch* touch, CCEvent* event)
 {
 	CCLOG("Touch Moved");
+
 		endPos = CCDirector::sharedDirector()->convertToGL(touch->getLocation());
 		tempPos = endPos - startPos;
 		startPos = endPos;
@@ -117,11 +91,11 @@ void GameLayer::ccTouchMoved(CCTouch* touch, CCEvent* event)
 
 	if (tempPos.y < 0 && pigeonPos.y < SCREEN_WIDTH*2+100)
 	{
-		pigeonPos.y += 6.5f;
+		pigeonPos.y += 5.0f;
 	}
 	else if (tempPos.y > 0 && pigeonPos.y > SCREEN_WIDTH*2-320)
 	{
-		pigeonPos.y -= 6.5f;
+		pigeonPos.y -= 5.0f;
 	}
 
 	if (tempPos.x > 10 )
@@ -146,11 +120,6 @@ void GameLayer::onEnter()
 	this->setTouchEnabled(true);
 	CCDirector::sharedDirector()->getTouchDispatcher()->addTargetedDelegate(this, 1, true);
 	
-	b2Vec2 gravity;
-	gravity.Set(0.0f, -10.0f);
-
-	world = new b2World(gravity);
-
 	CCNode::onEnter();
 }
 
@@ -180,7 +149,7 @@ void GameLayer::initPlayer()
 		pigeonSprite = CCSprite::createWithSpriteFrameName("pigeonFlight1.png");
 
 		pigeonSprite->setScale(0.5f);
-		pigeonSprite->setPosition(ccp(SCREEN_WIDTH/2, (SCREEN_WIDTH/2)+(SCREEN_WIDTH*1.5)));
+		pigeonSprite->setPosition(ccp(SCREEN_WIDTH/2 - 500, SCREEN_WIDTH*3 + 250));
 
 		CCAction* flightAction = CCRepeatForever::create(CCAnimate::create(flightAnim));
 		pigeonSprite->runAction(flightAction);
@@ -200,23 +169,29 @@ void GameLayer::initForeground()
 		//Add background
 		
 		
+		ground = CCSprite::create("world04_nobuildings.png");
+		//ground->setAnchorPoint(ccp(3000, 3100));
+
+
+		//ground->setScale(.1);
+		//ground->setPosition(ccp(SCREEN_WIDTH*3/2, SCREEN_WIDTH*3/2));
 		
-		ground = CCSprite::create("GROUND.png");
-		CCSprite* trees1 = CCSprite::create("TREE01.png");
+
+		//CCSprite* trees1 = CCSprite::create("TREE01.png");
 
 		// Scale background to proper size
-		ground->setScale(3.0);
+		//ground->setScale(3.0);
 		//trees1->setScale(0.5f);
 
-		ground->setPosition(ccp((SCREEN_WIDTH/2), (SCREEN_HEIGHT/2)));
-		trees1->setPosition(ccp((SCREEN_WIDTH/2)-220, (SCREEN_HEIGHT/2)+48));
+		//ground->setPosition(ccp((SCREEN_WIDTH/2), (SCREEN_HEIGHT/2)-3500));
+		//trees1->setPosition(ccp((SCREEN_WIDTH/2)-220, (SCREEN_HEIGHT/2)+48));
 
 		//sky->setAnchorPoint(ccp(SCREEN_WIDTH/2, (SCREEN_HEIGHT/2)-1300));
 		//ground->setAnchorPoint(ccp(SCREEN_WIDTH/2, (SCREEN_HEIGHT/2)-1000));
 		//trees1->setAnchorPoint(ccp((SCREEN_WIDTH/2), (SCREEN_HEIGHT/2)-1300));
 
 		this->addChild(ground);
-		ground->addChild(trees1);
+		//ground->addChild(trees1);
 
 
 }
@@ -235,46 +210,20 @@ void GameLayer::rotateForeground(float dir)
 
 	ground->runAction(seq);
 
-	
-}
-
-void GameLayer::poopMech()
-{
-	CCLog("Enable Poop Launcher");
-	target = CCSprite::create();
-	target->setPosition(ccp(SCREEN_WIDTH/2, SCREEN_WIDTH*2-375));
-	target->setAnchorPoint(ccp(SCREEN_WIDTH*1.5, SCREEN_WIDTH*1.5));
-
-	ground->addChild(target, 1);
-
-	target->runAction(CCRotateBy::create(0.5f, angle));
-
-	bomb = CCSprite::create("poop.png");
-	bomb->setPosition(ccp(pigeonSprite->getPositionX(), pigeonSprite->getPositionY()-50));
-
-	this->addChild(bomb, 1);
-
-	bomb->runAction(CCMoveTo::create(0.5f, target->getPosition()));
-	
-	if ( bomb->getPositionY() == target->getPositionY())
-	{
-		bomb->removeFromParentAndCleanup(true);
-	}
-	
 }
 
 void GameLayer::update(float dt)
 {
-	if (angle == -1.0f)
+	/*if (angle == -1.0f)
 	{
+		CCLog("update -1.0");
 		rotateForeground(-1.0f);
 	}
 	else if (angle == 1.0f)
 	{
+		CCLog("update 1.0");
 		rotateForeground(1.0f);
-	}
-
-
+	}*/
 }
 
 
@@ -297,12 +246,6 @@ HUDLayer::HUDLayer()
 
 void HUDLayer::initHUD()
 {
-	char str;
-	int sc2 = -200;
-	CCString* sc = CCString::create("Score: ");
-	
-
-
 		//Create pause menu sprite
 		CCMenuItemFont* pauseItem = CCMenuItemFont::create("Pause", this, 
 			menu_selector(PauseMenu::onPause));
@@ -314,13 +257,5 @@ void HUDLayer::initHUD()
 		// set menu position
 		menu->setPosition(SCREEN_WIDTH - 55, 20);
 
-		this->addChild(menu, 1);
-
-		
-		CCLabelTTF* score = CCLabelTTF::create(sc->getCString(), "Comic Sans", 25);
-		score->setPosition(ccp(SCREEN_WIDTH-200, SCREEN_HEIGHT-20));
-
-		this->addChild(score, 3);
-		
-
+		this->addChild(menu, 3);
 }

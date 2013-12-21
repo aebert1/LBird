@@ -1,25 +1,22 @@
 #pragma once
 
 #include "cocos2d.h"
-#include "Box2D\Box2D.h"
 #include "AppDelegate.h"
-
 
 USING_NS_CC;
 
 
 
 
-class BackgroundLayer : public cocos2d::CCLayer
+class SkyLayer : public cocos2d::CCLayer
 {
 public:
 
-	BackgroundLayer();
+	SkyLayer();
 	//virtual bool init();
 
 	void initSky();
-	void initGround();
-	CREATE_FUNC(BackgroundLayer);
+	CREATE_FUNC(SkyLayer);
 };
 
 class GameLayer : public cocos2d::CCLayer
@@ -42,11 +39,7 @@ public:
 	void initForeground();
 	void rotateForeground(float);
 
-	void poopMech();
-
 	virtual void update(float);
-
-	bool poop;
 
 	float angle;
 
@@ -54,11 +47,6 @@ public:
 	CCPoint pigeonPos;
 	CCSprite* pigeonSprite;
 	CCSprite* ground;
-	CCSprite* target;
-	CCSprite* bomb;
-
-	b2World* world;
-
 	
 	CREATE_FUNC(GameLayer);
 

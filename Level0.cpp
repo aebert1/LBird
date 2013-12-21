@@ -14,19 +14,20 @@ CCScene* Level0::scene()
 		CC_BREAK_IF(! scene);
 
 		//layer is an autorelease object
-		BackgroundLayer* backgroundLayer = BackgroundLayer::create();
-		backgroundLayer->setContentSize(CCSizeMake(SCREEN_WIDTH, SCREEN_HEIGHT));
-		CC_BREAK_IF(! backgroundLayer);
+		SkyLayer* skyLayer = SkyLayer::create();
+		skyLayer->setContentSize(CCSizeMake(SCREEN_WIDTH, SCREEN_WIDTH));
+		//skyLayer->setPosition(ccp(0, SCREEN_HEIGHT*-2.25));
+		CC_BREAK_IF(! skyLayer);
 
 		//add layer as a child to scene
-		scene->addChild(backgroundLayer, 1);
-		/*
+		scene->addChild(skyLayer, 1);
+
 		GameLayer* gameLayer = GameLayer::create();
 		gameLayer->setContentSize(CCSizeMake(SCREEN_WIDTH*3, SCREEN_WIDTH*3));
-		gameLayer->setPosition(ccp(0, SCREEN_HEIGHT*-2.25));
+		gameLayer->setPosition(ccp(SCREEN_WIDTH/2, SCREEN_WIDTH*-2.75));
 		CC_BREAK_IF(! gameLayer);
 		scene->addChild(gameLayer, 2);
-		*/
+
 		HUDLayer* hudLayer = HUDLayer::create();
 		hudLayer->setContentSize(CCSizeMake(SCREEN_WIDTH, SCREEN_HEIGHT));
 		CC_BREAK_IF(! hudLayer);
