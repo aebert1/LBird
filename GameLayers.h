@@ -35,6 +35,7 @@ public:
 
 	void initPlayer();
 	void updatePlayer();
+	void updateElastic();
 
 	void initForeground();
 	void rotateForeground(float);
@@ -47,9 +48,10 @@ public:
 	CCPoint pigeonPos;
 	CCSprite* pigeonSprite;
 	CCSprite* ground;
-	
+	void tick1(float dt);
+	void tick2(float dt);
 	CREATE_FUNC(GameLayer);
-
+	int nIndexTic;
 	
 };
 

@@ -42,7 +42,7 @@ void SkyLayer::initSky()
 
 
 
-GameLayer::GameLayer()
+GameLayer::GameLayer():nIndexTic(0)
 {
 	bool bRet = false;
 
@@ -131,6 +131,7 @@ void GameLayer::onExit()
 
 void GameLayer::initPlayer()
 {
+
 	CCSpriteFrameCache* frameCache = CCSpriteFrameCache::sharedSpriteFrameCache();
 		frameCache->addSpriteFramesWithFile("pigeonFlight.plist");
 
@@ -155,7 +156,48 @@ void GameLayer::initPlayer()
 		pigeonSprite->runAction(flightAction);
 		pigeonFlightSheet->addChild(pigeonSprite, 3);
 
+		schedule(schedule_selector(GameLayer::tick1), 0.10f);
+		schedule(schedule_selector(GameLayer::tick2), 0.03f);
+
 }
+
+void GameLayer::tick1(float dt)
+{
+	//CCPoint pige = pigeonSprite->getPosition();
+	pigeonPos = pigeonSprite->getPosition();
+	switch (nIndexTic)
+	{
+	case 0:
+		pigeonPos.x = pigeonPos.x - 30;
+		break;
+	case 1:
+		pigeonPos.x = pigeonPos.x + 30;
+		break;
+	case 2:
+		break;
+	}
+	updateElastic();
+	nIndexTic++;
+	if (nIndexTic==3)
+		nIndexTic=0;
+	CCLog("tick1");
+}
+
+void GameLayer::tick2(float dt)
+{
+	if (angle == -1.0f)
+	{
+		CCLog("update -1.0");
+		rotateForeground(-1.0f);
+	}
+	else if (angle == 1.0f)
+	{
+		CCLog("update 1.0");
+		rotateForeground(1.0f);
+	}
+	CCLog("tick2");
+}
+
 
 void GameLayer::updatePlayer()
 {
@@ -164,31 +206,19 @@ void GameLayer::updatePlayer()
 
 }
 
+void GameLayer::updateElastic()
+{
+	pigeonSprite->runAction(CCSpeed::create(CCMoveTo::create(0.001f, pigeonPos),0.008f));
+}
+
 void GameLayer::initForeground()
 {
 		//Add background
 		
 		
-		ground = CCSprite::create("world04_nobuildings.png");
-		//ground->setAnchorPoint(ccp(3000, 3100));
-
-
-		//ground->setScale(.1);
-		//ground->setPosition(ccp(SCREEN_WIDTH*3/2, SCREEN_WIDTH*3/2));
+		ground = CCSprite::create("WorldForeground.png");
 		
-
-		//CCSprite* trees1 = CCSprite::create("TREE01.png");
-
-		// Scale background to proper size
-		//ground->setScale(3.0);
-		//trees1->setScale(0.5f);
-
-		//ground->setPosition(ccp((SCREEN_WIDTH/2), (SCREEN_HEIGHT/2)-3500));
-		//trees1->setPosition(ccp((SCREEN_WIDTH/2)-220, (SCREEN_HEIGHT/2)+48));
-
-		//sky->setAnchorPoint(ccp(SCREEN_WIDTH/2, (SCREEN_HEIGHT/2)-1300));
-		//ground->setAnchorPoint(ccp(SCREEN_WIDTH/2, (SCREEN_HEIGHT/2)-1000));
-		//trees1->setAnchorPoint(ccp((SCREEN_WIDTH/2), (SCREEN_HEIGHT/2)-1300));
+		ground->setPosition(ccp(0, 120));
 
 		this->addChild(ground);
 		//ground->addChild(trees1);
@@ -214,6 +244,7 @@ void GameLayer::rotateForeground(float dir)
 
 void GameLayer::update(float dt)
 {
+	CCLog("PigeonPos x=%f,y=%f",pigeonSprite->getPositionX(),pigeonSprite->getPositionY());
 	/*if (angle == -1.0f)
 	{
 		CCLog("update -1.0");
