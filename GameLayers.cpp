@@ -31,16 +31,10 @@ void SkyLayer::initSky()
 
 
 
+/********************************************************************
+					        Game Layer
 
-
-
-
-
-
-
-
-
-
+********************************************************************/
 
 GameLayer::GameLayer():nIndexTic(0)
 {
@@ -51,6 +45,7 @@ GameLayer::GameLayer():nIndexTic(0)
 		CC_BREAK_IF(! GameLayer::init());
 
 		angle = -1;
+		
 
 		initPlayer();
 
@@ -89,11 +84,11 @@ void GameLayer::ccTouchMoved(CCTouch* touch, CCEvent* event)
 
 	pigeonPos = pigeonSprite->getPosition();
 
-	if (tempPos.y < 0 && pigeonPos.y < SCREEN_WIDTH*2+100)
+	if (tempPos.y < 0 && pigeonPos.y < 3200)
 	{
 		pigeonPos.y += 5.0f;
 	}
-	else if (tempPos.y > 0 && pigeonPos.y > SCREEN_WIDTH*2-320)
+	else if (tempPos.y > 0 && pigeonPos.y > 2735)
 	{
 		pigeonPos.y -= 5.0f;
 	}
@@ -189,20 +184,26 @@ void GameLayer::tick2(float dt)
 	{
 		CCLog("update -1.0");
 		rotateForeground(-1.0f);
+		pigeonSprite->setScaleX(0.5f);
 	}
 	else if (angle == 1.0f)
 	{
 		CCLog("update 1.0");
 		rotateForeground(1.0f);
+		pigeonSprite->setScaleX(-0.5f);
 	}
 	CCLog("tick2");
 }
-
 
 void GameLayer::updatePlayer()
 {
 
 	pigeonSprite->runAction(CCMoveTo::create(0.001f, pigeonPos));
+
+}
+
+void GameLayer::poopMech()
+{
 
 }
 
@@ -232,9 +233,10 @@ void GameLayer::rotateForeground(float dir)
 	int d = 5;
 	
 	CCAction* action1 = runAction(CCRotateBy::create(0.05f, dir));
-	CCArray* actArray = CCArray::createWithCapacity(1);
+	CCArray* actArray = CCArray::createWithCapacity(2);
 
 	actArray->addObject(action1);
+	
 
 	CCSequence* seq = CCSequence::create(actArray);
 
@@ -256,6 +258,9 @@ void GameLayer::update(float dt)
 		rotateForeground(1.0f);
 	}*/
 }
+
+
+
 
 
 
