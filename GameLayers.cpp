@@ -204,6 +204,35 @@ void GameLayer::updatePlayer()
 
 void GameLayer::poopMech()
 {
+	CCSpriteFrameCache* frameCache = CCSpriteFrameCache::sharedSpriteFrameCache();
+	frameCache->addSpriteFramesWithFile("Poop.plist");
+
+	CCSpriteBatchNode* poopSheet = CCSpriteBatchNode::create("poop.png");
+	ground->addChild(poopSheet, 3);
+
+	CCArray* poopFrames = new CCArray;
+	for ( int i = 1; i <= 11; i++)
+	{
+		CCString* filename = new CCString;
+
+		if (i < 10)
+			filename = CCString::createWithFormat("poo_sprite0%i.png", i);
+		else
+			filename = CCString::createWithFormat("poo_sprite%i.png", i);
+
+		CCSpriteFrame* frame = CCSpriteFrameCache::sharedSpriteFrameCache()->spriteFrameByName(filename->getCString());
+		poopFrames->addObject(frame);
+	}
+
+	CCAnimation* poopAnim = CCAnimation::createWithSpriteFrames(poopFrames, 0.05);
+	poopSprite = CCSprite::createWithSpriteFrameName("poo_sprite01.png");
+	
+	poopSprite->setPositionY(pigeonSprite->getPositionY()-20);
+	poopSprite->setPositionX(pigeonSprite->getPositionX()+10*angle);
+
+	CCAction* poopAction = CCAnimate::create(poopAnim);
+	
+	
 
 }
 

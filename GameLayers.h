@@ -36,6 +36,7 @@ public:
 	void initPlayer();
 	void updatePlayer();
 	void updateElastic();
+	void poopMech();
 
 	void initForeground();
 	void rotateForeground(float);
@@ -47,6 +48,7 @@ public:
 	CCPoint startPos, endPos, tempPos;
 	CCPoint pigeonPos;
 	CCSprite* pigeonSprite;
+	CCSprite* poopSprite;
 	CCSprite* ground;
 	void tick1(float dt);
 	void tick2(float dt);
