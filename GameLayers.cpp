@@ -44,12 +44,16 @@ GameLayer::GameLayer():nIndexTic(0)
 	{
 		CC_BREAK_IF(! GameLayer::init());
 
-		angle = -1;
+		angle = 0;
+
+		poopSprite = NULL;
 		
 
 		initPlayer();
 
 		initForeground();
+
+		placeFireButton();
 
 		scheduleUpdate();
 
@@ -70,7 +74,7 @@ bool GameLayer::ccTouchBegan(CCTouch* touch, CCEvent* event)
 void GameLayer::ccTouchEnded(CCTouch* touch, CCEvent* event)
 {
 	CCLOG("Touch Ended");
-	
+	angle = 0;
 }
 
 void GameLayer::ccTouchMoved(CCTouch* touch, CCEvent* event)
@@ -128,23 +132,23 @@ void GameLayer::initPlayer()
 {
 
 	CCSpriteFrameCache* frameCache = CCSpriteFrameCache::sharedSpriteFrameCache();
-		frameCache->addSpriteFramesWithFile("pigeonFlight.plist");
+		frameCache->addSpriteFramesWithFile("LuckyFlying.plist");
 
-		CCSpriteBatchNode* pigeonFlightSheet = CCSpriteBatchNode::create("pigeonFlight.png");
+		CCSpriteBatchNode* pigeonFlightSheet = CCSpriteBatchNode::create("LuckyFlying.png");
 		addChild(pigeonFlightSheet, 3);
 
 		CCArray* pigeonFrames = new CCArray;
-		for ( int i = 1; i <= 18; i++)
+		for ( int i = 2; i <= 4; i++)
 		{
-			CCString* filename = CCString::createWithFormat("pigeonFlight%d.png", i);
+			CCString* filename = CCString::createWithFormat("lucky_flying_0000%d.png", i);
 			CCSpriteFrame* frame = CCSpriteFrameCache::sharedSpriteFrameCache()->spriteFrameByName(filename->getCString());
 			pigeonFrames->addObject(frame);
 		}
 
-		CCAnimation* flightAnim = CCAnimation::createWithSpriteFrames(pigeonFrames, 0.05);
-		pigeonSprite = CCSprite::createWithSpriteFrameName("pigeonFlight1.png");
+		CCAnimation* flightAnim = CCAnimation::createWithSpriteFrames(pigeonFrames, 0.1);
+		pigeonSprite = CCSprite::createWithSpriteFrameName("lucky_flying_00002.png");
 
-		pigeonSprite->setScale(0.5f);
+		//pigeonSprite->setScale(0.5f);
 		pigeonSprite->setPosition(ccp(SCREEN_WIDTH/2 - 500, SCREEN_WIDTH*3 + 250));
 
 		CCAction* flightAction = CCRepeatForever::create(CCAnimate::create(flightAnim));
@@ -156,6 +160,16 @@ void GameLayer::initPlayer()
 
 }
 
+void GameLayer::placeFireButton()
+{
+	CCMenuItemImage* fireButton = CCMenuItemImage::create("fire_button.png", "fire_button_hit.png",
+		this, menu_selector(GameLayer::onPoopMech));
+	CCMenu* menu = CCMenu::create(fireButton, NULL);
+	menu->setPosition(ccp(SCREEN_WIDTH/2 - 75, SCREEN_WIDTH*3 - 175));
+
+	this->addChild(menu, 1);
+}
+
 void GameLayer::tick1(float dt)
 {
 	//CCPoint pige = pigeonSprite->getPosition();
@@ -163,10 +177,10 @@ void GameLayer::tick1(float dt)
 	switch (nIndexTic)
 	{
 	case 0:
-		pigeonPos.x = pigeonPos.x - 30;
+		pigeonPos.x = pigeonPos.x - 10;
 		break;
 	case 1:
-		pigeonPos.x = pigeonPos.x + 30;
+		pigeonPos.x = pigeonPos.x + 10;
 		break;
 	case 2:
 		break;
@@ -184,56 +198,103 @@ void GameLayer::tick2(float dt)
 	{
 		CCLog("update -1.0");
 		rotateForeground(-1.0f);
-		pigeonSprite->setScaleX(0.5f);
+		pigeonSprite->setScaleX(1.0f);
 	}
 	else if (angle == 1.0f)
 	{
 		CCLog("update 1.0");
 		rotateForeground(1.0f);
-		pigeonSprite->setScaleX(-0.5f);
+		pigeonSprite->setScaleX(-1.0f);
 	}
+	else
+	{
+		rotateForeground(0.0f);
+	}
+
 	CCLog("tick2");
 }
 
 void GameLayer::updatePlayer()
 {
 
-	pigeonSprite->runAction(CCMoveTo::create(0.001f, pigeonPos));
+	pigeonSprite->runAction(CCMoveTo::create(0.0001f, pigeonPos));
 
 }
 
-void GameLayer::poopMech()
+void GameLayer::onPoopMech(CCObject* pSender)
 {
+	/*
+	CCString* filename = new CCString;
 	CCSpriteFrameCache* frameCache = CCSpriteFrameCache::sharedSpriteFrameCache();
-	frameCache->addSpriteFramesWithFile("Poop.plist");
+	frameCache->addSpriteFramesWithFile("poop1.plist");
 
-	CCSpriteBatchNode* poopSheet = CCSpriteBatchNode::create("poop.png");
+	CCSpriteBatchNode* poopSheet = CCSpriteBatchNode::create("poop1.png");
 	ground->addChild(poopSheet, 3);
 
 	CCArray* poopFrames = new CCArray;
+	//CCArray* poopFrames1 = new CCArray;
 	for ( int i = 1; i <= 11; i++)
 	{
-		CCString* filename = new CCString;
-
 		if (i < 10)
-			filename = CCString::createWithFormat("poo_sprite0%i.png", i);
+			filename = CCString::createWithFormat("poo_sprite%i.png", i);
 		else
 			filename = CCString::createWithFormat("poo_sprite%i.png", i);
-
 		CCSpriteFrame* frame = CCSpriteFrameCache::sharedSpriteFrameCache()->spriteFrameByName(filename->getCString());
 		poopFrames->addObject(frame);
 	}
+	
+	CCAnimation* poopAnim = CCAnimation::createWithSpriteFrames(poopFrames, 0.05f);
+	//CCAnimation* poopAnim1 = CCAnimation::createWithSpriteFrames(poopFrames1, 0.05f);
+	poopSprite = CCSprite::createWithSpriteFrameName("poo_sprite1.png");
 
-	CCAnimation* poopAnim = CCAnimation::createWithSpriteFrames(poopFrames, 0.05);
+	poopSprite->setPosition(ccp(pigeonSprite->getPositionX(), pigeonSprite->getPositionY()-50));
+
+	CCAction* poopActBegin = CCAnimate::create(poopAnim);
+	//CCAction* poopActEnd = CCAnimate::create(poopAnim1);
+	CCAction* poopFall = CCMoveBy::create(1.0f, ccp(10*angle, pigeonSprite->getPositionY()-2735));
+
+	poopSprite->runAction(poopActBegin);
+	poopSprite->runAction(poopFall);
+	//poopSprite = CCSprite::createWithSpriteFrameName("poo_sprite5.png");
+	//poopSprite->runAction(poopActEnd);
+
+	poopSheet->addChild(poopSprite, 3);
+
+	/*
+	float animDuration = 0.05;
+
+	CCAnimation* poopAnim = CCAnimation::createWithSpriteFrames(poopFrames, animDuration);
 	poopSprite = CCSprite::createWithSpriteFrameName("poo_sprite01.png");
 	
-	poopSprite->setPositionY(pigeonSprite->getPositionY()-20);
-	poopSprite->setPositionX(pigeonSprite->getPositionX()+10*angle);
+	poopSprite->setPositionY(pigeonPos.y - 20);
+	poopSprite->setPositionX(pigeonPos.x + 10 * angle);
 
 	CCAction* poopAction = CCAnimate::create(poopAnim);
+	CCAction* poopFall = CCMoveBy::create(animDuration, ccp(30*angle, -2));
 	
+	poopSprite->runAction(poopAction);
 	
+	poopSprite->runAction(poopFall);
+	*/
+	poopSprite = CCSprite::create("poo_sprite01.png");
+	poopSprite->setPosition(ccp(pigeonSprite->getPositionX()-10, pigeonSprite->getPositionY()-48));
 
+	this->addChild(poopSprite, 3);
+
+	float fallDist = 2700-pigeonSprite->getPositionY();
+	float fallDur = 0.0f;
+	fallDur = 1.0f;
+
+
+	CCAction* drop = CCMoveBy::create(fallDur, ccp(100*angle, fallDist));
+	CCArray* actArray = CCArray::createWithCapacity(2);
+
+	actArray->addObject(drop);
+	actArray->addObject(CCCallFunc::create(poopSprite, callfunc_selector(CCSprite::removeFromParent)));
+	
+	CCSequence* seq = CCSequence::create(actArray);
+
+	poopSprite->runAction(seq);
 }
 
 void GameLayer::updateElastic()
@@ -276,6 +337,8 @@ void GameLayer::rotateForeground(float dir)
 void GameLayer::update(float dt)
 {
 	CCLog("PigeonPos x=%f,y=%f",pigeonSprite->getPositionX(),pigeonSprite->getPositionY());
+
+	
 	/*if (angle == -1.0f)
 	{
 		CCLog("update -1.0");
@@ -320,7 +383,9 @@ void HUDLayer::initHUD()
 		menu->alignItemsHorizontally();
 
 		// set menu position
-		menu->setPosition(SCREEN_WIDTH - 55, 20);
+		menu->setPosition(SCREEN_WIDTH - 50, SCREEN_HEIGHT - 20);
 
 		this->addChild(menu, 3);
+
+		
 }

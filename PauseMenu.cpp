@@ -67,7 +67,7 @@ bool PauseMenu::init()
 		CCMenuItemImage* resumeItem = CCMenuItemImage::create("button_tap.png", "button_tap.png", 
 			this, menu_selector(PauseMenu::onResume));
 		CCMenuItemImage* exitItem = CCMenuItemImage::create("b_exit.png", "b_exit.png",
-			this, menu_selector(PauseMenu::onResume));
+			this, menu_selector(PauseMenu::onQuit));
 		// initialize menu and set position
 		CCMenu* menu = CCMenu::create(resumeItem, NULL);
 		CCMenu* menu1 = CCMenu::create(exitItem, NULL);

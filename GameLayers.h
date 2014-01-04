@@ -34,9 +34,10 @@ public:
 	void onExit();
 
 	void initPlayer();
+	void placeFireButton();
 	void updatePlayer();
 	void updateElastic();
-	void poopMech();
+	void onPoopMech(CCObject* pSender);
 
 	void initForeground();
 	void rotateForeground(float);
